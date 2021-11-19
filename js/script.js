@@ -1,6 +1,3 @@
-
-// ===========  табы  =========== 
-
 const tabsNavItems = document.querySelectorAll('.tab');
 const tabsBlocks = document.querySelectorAll('.tabs__block');
 const recentTab = document.getElementById('recent-tab');
@@ -11,7 +8,12 @@ const recentContent = document.querySelector('.recent__content');
 const settingsButtons = document.querySelectorAll('.settings');
 const uploadWindow = document.getElementById('upload-window');
 const errorMessage = document.querySelector('.error-message')
+const dragArea = document.getElementById('drag-area');
 
+
+
+
+// ===========  табы  =========== 
 
 tabsNavItems.forEach(onTabClick);
 
@@ -41,23 +43,17 @@ function onTabClick(item) {
 // сделать первый таб активным изначально не через html
 document.querySelector('.tab:nth-child(1)').click();
 
-
 recentTab.addEventListener('click', show5RecentFiles);
-// recentTab.addEventListener('click',  showUploadWindowLarge);
 
 
 
 // ===========  drag and drop  =========== 
-
-const dragArea = document.getElementById('drag-area');
-
 
 dragArea.addEventListener('dragenter', (e) => {
    e.preventDefault();
    e.stopPropagation();
    dragArea.classList.add('highlight');
 })
-
 
 dragArea.addEventListener('dragleave', (e) => {
    e.preventDefault();
@@ -70,7 +66,6 @@ dragArea.addEventListener('dragover', (e) => {
 })
 
 dragArea.addEventListener('drop', (e) => {
-   console.log('drop', e.dataTransfer.files);
    e.stopPropagation();
    e.preventDefault();
 
@@ -79,7 +74,6 @@ dragArea.addEventListener('drop', (e) => {
 
    uploadFileDragAndDrop(file);
 })
-
 
 // ===========  drag and drop end  =========== 
 
@@ -92,7 +86,7 @@ settingsButtons.forEach((settingsButton) => {
       uploadWindow.classList.toggle('active');
    })
 })
-// submitBtn.addEventListener('click', uploadFile);
+
 allUploadsButton.addEventListener('click', showAllRecentFiles);
 
 
@@ -103,19 +97,14 @@ function uploadFileDragAndDrop(file) {
 
    // создаем ссылку для загружемого файла
    let fileRef = storageRef.child('files/' + file.name); // берем имя файла из объекта
-   // let type = file.type;
-   // console.log(type);
 
    // загружаем файл в storage
    fileRef.put(file)
    .then((snapshot) => {
       recentContent.innerHTML = '';
-      console.log('Uploaded file!');
-      // snapshot.ref.getDownloadURL();
       document.querySelector('.tab:nth-child(2)').click();  // переключаем таб recent
-      setFilesToDatabase(fnnn); // добавляем инф о загруженном файле в database
+      setFilesToDatabase(file); // добавляем инф о загруженном файле в database
       show5RecentFiles();
-      
    })
    .catch((error) => {
       errorMessage.style.display = 'block';
@@ -130,18 +119,15 @@ function uploadFile() {
 
    // создаем ссылку для загружемого файла
    let fileRef = storageRef.child('files/' + file.name); // берем имя файла из объекта
-   let type = file.type;
 
    // загружаем файл в storage
    fileRef.put(file)
    .then((snapshot) => {
       recentContent.innerHTML = '';
-      console.log('Uploaded file!');
       snapshot.ref.getDownloadURL();
       document.querySelector('.tab:nth-child(2)').click();  // переключаем таб recent
       setFilesToDatabase(file); // добавляем инф о загруженном файле в database
       show5RecentFiles();
-      
    })
    .catch((error) => {
       errorMessage.style.display = 'block';
@@ -153,13 +139,8 @@ function uploadFile() {
 function setFilesToDatabase(file) {
    firebase.firestore().collection("files").doc(file.name).set({
       name: file.name,
-      size: (file.size/1000).toFixed(2) + 'Kb',
-      // size: checkFileSize(file.size), // ??????????
-      type: file.type,
+      size: file.size,
       timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-   })
-   .then(() => {
-      console.log("Document successfully written!");
    })
    .catch((error) => {
       errorMessage.style.display = 'block';
@@ -167,14 +148,7 @@ function setFilesToDatabase(file) {
    });
 }
 
-// ??????????
-// function checkFileSize(fileSize) {
-//    if (fileSize/1000 > 1000) {
-//       return (fileSize/1000000).toFixed(2) + 'Mb';
-//    } else {
-//       return (file.size/1000).toFixed(2) + 'Kb';
-//    }
-// }
+
 
 
 function show5RecentFiles() {
@@ -209,7 +183,7 @@ function showAllRecentFiles() {
 
 function createFileHTMLElement(doc) {
    let fileName = doc.data().name;
-   let fileSize = doc.data().size;
+   let fileSize = checkFileSize(doc.data().size);
    let fileTime = getFileTime(doc); // получаем время от загрузки файла
    let fileTypeImage = checkFileTypeImage(fileName); // получаем картинку в зависимости от типа файла
    
@@ -231,6 +205,16 @@ function createFileHTMLElement(doc) {
 
    recentContent.insertAdjacentHTML('beforeend', fileTemplate);
 }
+
+
+function checkFileSize(fileSize) {
+   if (fileSize/1000 > 1000) {
+      return (fileSize/1000000).toFixed(2) + 'Mb';
+   } else {
+      return (fileSize/1000).toFixed(2) + 'Kb';
+   }
+}
+
 
 
 function getFileTime(doc) {
@@ -257,7 +241,7 @@ function getFileTime(doc) {
      
 
 function checkFileTypeImage(name) {
-   //проверка картинки в зависимости от типа файла ???????????
+   //проверка картинки в зависимости от типа файла
    let fileTypeImage;
    let res;
 
@@ -267,12 +251,14 @@ function checkFileTypeImage(name) {
       }
    }
    
-   if (res == 'png' || res == 'jpg' || res == 'svg' || res == 'webp' ) {
+   if (res == 'png' || res == 'jpg' || res == 'svg' || res == 'webp'  || res == 'jpeg' ) {
       fileTypeImage = 'image.svg';
    } else if (res == 'txt' || res == 'doc' || res == 'docx') {
       fileTypeImage = 'document.svg';
    } else if (res == 'pdf') {
       fileTypeImage = 'PDF.svg';
+   } else {
+      fileTypeImage = 'document.svg';
    }
    return fileTypeImage;
 }
