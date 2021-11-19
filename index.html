@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+   <html lang="en">
+
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Frontend Everyday - Task11</title>
+
+      <link rel="stylesheet" href="css/style.css">
+   </head>
+
+   <body>
+      <div class="wrapper">
+        <div class="main-window ">
+            <div class="main-window__top">
+               <div class="user__img">
+                  <img src="img/user.png" alt="">
+               </div>
+               <div class="user__info">
+                  <div class="user__name">Laura Eddy</div>
+                  <div class="user__email">info@lauraeddy.com.au</div>
+               </div>
+               <div class="settings">
+                  <div class="settings__icon">
+                     <img src="img/settings.svg" alt="">
+                  </div>
+               </div>
+            </div>
+            <div class="main-window__content">
+               <div class="storage">
+                  <h2 class="storage__title">Storage</h2>
+                  <div class="storage__info">84gb of 120GB</div>
+                  <div class="storage__progress">
+                     <div class="storage__progress-active" style="width:79%"></div>
+                  </div>
+                  <div class="storage__button">
+                     <button class="btn">Upgrade Plan</button>
+                     <span class="storage__promo">10% off plans this month</span>
+                  </div>
+               </div>
+               <div class="storage-location">
+                  <div class="storage-location__info">
+                     <h2 class="storage-location__title">Storage location</h2>
+                     <div class="storage-location__location">C: Laura\My Documents</div>
+                  </div>
+                  <div class="storage-location__button">
+                     <button class="btn-white">Change</button>
+                  </div>
+               </div>
+               <div class="storage-notifications">
+                  <div class="storage-notifications__info">
+                     <h2 class="storage-notifications__title">Notifications</h2>
+                     <div class="storage-notifications__enabled">All notifications enabled</div>
+                  </div>
+                  <div class="storage-notifications__button">
+                     <button class="btn-white">Change</button>
+                  </div>
+               </div>
+            </div>
+            <div class="main-bottom">
+               <div class="main-bottom__icon">
+                  <img src="img/tick.svg" alt="">
+               </div>
+               <div class="main-bottom__text">Last synced: 3 mins ago</div>
+            </div>
+        </div>
+        <div class="upload-window" id="upload-window">
+           <div class="upload__top">
+              <div class="upload__tabs">
+                  <div class="upload__tabs-container">
+                     <div class="tab" data-tab="#drag-area">New Upload</div>
+                     <div class="tab" data-tab="#recent" id="recent-tab">Recent</div>
+                  </div>
+              </div>
+              <div class="settings">
+                  <div class="settings__icon settings__icon--upload">
+                     <img src="img/settings-blue.svg" alt="">
+                  </div>
+               </div>
+            </div>
+            <div class="error-message">
+               <!-- Ooops... something went wrong! -->
+            </div>
+            <div class="upload__content">
+               <div class="drag-area tabs__block" id="drag-area">
+                  <div class="drag-area__inner">
+                     <input type="file" class="file" id="file" style="display: none;" onchange="uploadFile()">    
+                     <label class="file-label" for="file">Click to browse or <br>
+                                                         drag and drop your files</label>
+                  </div>
+               </div>
+            
+         
+               <div class="recent tabs__block" id="recent">
+                  <div class="recent__content">
+                     <!-- <div class="recent-item">
+                        <div class="recent-item__icon">
+                           <img src="img/folder.svg" alt="">
+                        </div>
+                        <div class="recent-item__info">
+                           <div class="recent-item__name">user-journey-01.pdf</div>
+                           <div class="recent-item__date">2m ago</div>
+                        </div>
+                        <div class="recent-item__size recent-item__size--error">604KB</div>
+                        <div class="recent-item__dots">
+                           <img src="img/dots.svg" alt="dots">
+                        </div>
+                     </div> -->
+                  </div>
+                  <div class="recent__button" id="all-uploads">
+                     <button class="btn-white">View all uploads</button>
+                  </div>
+                  <div class="main-bottom">
+                     <div class="main-bottom__icon">
+                        <img src="img/tick.svg" alt="">
+                     </div>
+                     <div class="main-bottom__text">Last synced: 3 mins ago</div>
+                  </div>
+               </div>
+            </div>
+        </div>
+        
+      </div>
+      <!-- <input type="file" class="file">
+      <button class="submit">submit</button> -->
+
+      
+  
+   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+   <script>
+
+      var firebaseConfig = {
+         apiKey: "AIzaSyBOiTrrj-NBK3qsCBZE-fMcnOFIpzqGsRs",
+         authDomain: "fe-task11.firebaseapp.com",
+         projectId: "fe-task11",
+         storageBucket: "fe-task11.appspot.com",
+         messagingSenderId: "780220806658",
+         appId: "1:780220806658:web:b5ee366aaf00d811c1d91b"
+      };
+      
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // update firestore settings
+      firebase.firestore().settings({ timestampsInSnapshots: true});
+   </script>
+   <script src="js/script.js"></script>
+   </body>
+
+   </html>
+
