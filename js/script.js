@@ -9,7 +9,7 @@ const settingsButtons = document.querySelectorAll('.settings');
 const uploadWindow = document.getElementById('upload-window');
 const errorMessage = document.querySelector('.error-message')
 const dragArea = document.getElementById('drag-area');
-
+const loader = document.querySelector('.loader');
 
 
 
@@ -75,7 +75,7 @@ dragArea.addEventListener('drop', (e) => {
    uploadFileDragAndDrop(file);
 })
 
-// ===========  drag and drop end  =========== 
+// ===========  drag and drop конец =========== 
 
 
 
@@ -92,6 +92,7 @@ allUploadsButton.addEventListener('click', showAllRecentFiles);
 
 
 function uploadFileDragAndDrop(file) {
+   loader.style.display = 'block';
       // создаем ссылку на корневую папку
    let storageRef = firebase.storage().ref();
 
@@ -102,6 +103,7 @@ function uploadFileDragAndDrop(file) {
    fileRef.put(file)
    .then((snapshot) => {
       recentContent.innerHTML = '';
+      loader.style.display = 'none';
       document.querySelector('.tab:nth-child(2)').click();  // переключаем таб recent
       setFilesToDatabase(file); // добавляем инф о загруженном файле в database
       show5RecentFiles();
@@ -114,6 +116,7 @@ function uploadFileDragAndDrop(file) {
 
 function uploadFile() {
    const file = document.querySelector('.file').files[0];
+   loader.style.display = 'block';
       // создаем ссылку на корневую папку
    let storageRef = firebase.storage().ref();
 
@@ -124,6 +127,7 @@ function uploadFile() {
    fileRef.put(file)
    .then((snapshot) => {
       recentContent.innerHTML = '';
+      loader.style.display = 'none';
       snapshot.ref.getDownloadURL();
       document.querySelector('.tab:nth-child(2)').click();  // переключаем таб recent
       setFilesToDatabase(file); // добавляем инф о загруженном файле в database
@@ -216,7 +220,6 @@ function checkFileSize(fileSize) {
 }
 
 
-
 function getFileTime(doc) {
    let now = new Date();
    let fileAddTime = doc.data().timestamp.toMillis( );
@@ -238,7 +241,6 @@ function getFileTime(doc) {
    return fileTime;
 }
    
-     
 
 function checkFileTypeImage(name) {
    //проверка картинки в зависимости от типа файла

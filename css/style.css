@@ -517,6 +517,44 @@ body {
   text-align: center;
 }
 
+.loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4.5px solid #EBEFF2;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.loader__inner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4.5px solid transparent;
+  animation: spin 1.5s linear infinite;
+  border-left: 4.5px solid #4353FF;
+  border-right: 4.5px solid transparent;
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+  position: absolute;
+  top: -4.5px;
+  left: -4.5px;
+  right: 0;
+  bottom: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .file-label {
   font-size: 14px;
   line-height: 17px;
